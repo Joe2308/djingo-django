@@ -1,8 +1,17 @@
 from django.test import TestCase
+from .models import Item
 
 
 # Create your tests here.
-class TestDjango(TestCase):
+class TestModels(TestCase):
 
-    def test_this_thing_works(self):
-        self.assertEqual(1, 1)
+    def test_done_defaults_to_false(self):
+        item = Item.objects.create(name="Test Todo Item")
+        # Check if default status is done
+        self.assertFalse(item.done)
+
+    def test_item_string_method_returns_naem(self):
+        item = Item.objects.create(name="Test Todo Item")
+        self.assertEqual(str(item), 'Test Todo Item')
+
+

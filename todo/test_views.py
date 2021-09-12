@@ -11,7 +11,7 @@ class TestViews(TestCase):
         # test we have a valid http resonse
         self.assertEqual(response.status_code, 200)
         # Check correct template is being used
-        self.assertTemplateUsed(response, 'todo/to_list.html')
+        self.assertTemplateUsed(response, 'todo/todo_list.html')
 
     def test_get_add_item_page(self):
         # Set variable for add page
@@ -33,9 +33,9 @@ class TestViews(TestCase):
     
     def test_can_add_item(self):
         #  Test item can be added
-        response = self.client.POST("/add", {"name": "Test Added Item"})
+        response = self.client.post('/add', {'name': 'Test Added Item'})
         #  If item is added successfully redirect user to home
-        self.assertRedirects(response, "/")
+        self.assertRedirects(response, '/')
     
     def test_can_delete_item(self):
         # Create variable to access object id
@@ -60,3 +60,10 @@ class TestViews(TestCase):
         updated_item = Item.objects.get(id=item.id)
         # Check items done status
         self.assertFalse(updated_item.done)
+    
+    def test_can_edit_item(self):
+        item = Item.objects.create(name="Test Todo Item")
+        response = self.client.post(f"/edit/{item.id}", {'name': "Updated Name"})
+        self.assertRedirects(response, "/")
+        updated_item = Item.objects.get(id=item.id)
+        self.assertEqual(updated_item.name, "Update Name")
